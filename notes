@@ -1,0 +1,21 @@
+Type of error: Runtime --> NameError
+Raised when a given name is invalid or undefined.
+File path --> ./spec/oystercard_spec.rb
+Line number --> 3
+Solve --> Defining the class
+
+** Plan **
+1. Make the card
+2. Check the default balance, this should be 0
+
+1. Make the card
+2. Top up the card by 5
+3. Check the balance of the card, this should be 5
+
+1. Make the card
+2. Top up the card by 100
+
+1. Make a oystercard
+2. Top up the card by 20
+3. Deduct fare, 3 from the card
+4. check the balance
