@@ -21,44 +21,40 @@ RSpec.describe Oystercard do
     end
   end
 
+  it 'raises an error when minimum balance is not met' do
+    expect{subject.touch_in(station)}.to raise_error("Not enough money")
+  end
+
+  before(:example) do
+    @card = Oystercard.new
+    @card.top_up(59)
+    @card.touch_in(station)
+  end
+
   describe '#touch_in' do
     it "registers that the person has touched in" do
-      subject.top_up(59)
-      subject.touch_in(station)
-      expect(subject.in_journey?).to eq true
-    end
-
-    it 'raises an error when minimum balance is not met' do
-      expect{subject.touch_in(station)}.to raise_error("Not enough money")
+      expect(@card.in_journey?).to eq true
     end
 
     it 'remembers the entry station' do
-      subject.top_up(59)
-      subject.touch_in(station)
-      expect(subject.entry_station).to eq(station)
+      expect(@card.entry_station).to eq(station)
     end
   end
 
   describe '#touch_out' do
     it "registers that the person has touched out" do
-      subject.top_up(59)
-      subject.touch_in(station)
-      subject.touch_out
-      expect(subject.in_journey?).to eq false
+      @card.touch_out
+      expect(@card.in_journey?).to eq false
     end
 
     it "deduct money after touched out" do
-      subject.top_up(59)
-      subject.touch_in(station)
-      expect{subject.touch_out}.to change{subject.balance}.by(-1)
+      expect{@card.touch_out}.to change{@card.balance}.by(-1)
     end
   end
 
   describe '#in_journey?' do
     it 'returns true if person has touched in' do
-      subject.top_up(59)
-      subject.touch_in(station)
-      expect(subject.in_journey?).to eq true
+      expect(@card.in_journey?).to eq true
     end
   end
 
