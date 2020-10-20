@@ -30,13 +30,19 @@ RSpec.describe Oystercard do
 
   describe '#touch_in' do
     it "registers that the person has touched in" do
+      subject.top_up(59)
       subject.touch_in
       expect(subject.in_journey?).to eq true
+    end
+
+    it 'raises an error when minimum balance is not met' do
+      expect{subject.touch_in}.to raise_error("Not enough money")
     end
   end
 
   describe '#touch_out' do
     it "registers that the person has touched out" do
+      subject.top_up(59)
       subject.touch_in
       subject.touch_out
       expect(subject.in_journey?).to eq false
@@ -45,9 +51,13 @@ RSpec.describe Oystercard do
 
   describe '#in_journey?' do
     it 'returns true if person has touched in' do
+      subject.top_up(59)
       subject.touch_in
       expect(subject.in_journey?).to eq true
     end
   end
+
+
+
 
 end
