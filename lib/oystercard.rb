@@ -31,8 +31,7 @@ class Oystercard
 
   def touch_out(exit_station)
     deduct(MIN_FARE)
-    single_trip = {}
-    single_trip[@entry_station] = exit_station
+    single_trip = {@entry_station => exit_station}
     @travel_history << single_trip
     @entry_station = nil
   end
