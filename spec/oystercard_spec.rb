@@ -17,17 +17,6 @@ RSpec.describe Oystercard do
     end
   end
 
-  describe '#deduct' do
-    it 'deducts a fare from the balance' do
-      subject.top_up(20)
-      expect{subject.deduct(3)}.to change{subject.balance}.by(-3)
-    end
-
-    it "doesn't allow negative balance" do
-      expect{subject.deduct(9999)}.to raise_error "Balance too low"
-    end
-  end
-
   describe '#touch_in' do
     it "registers that the person has touched in" do
       subject.top_up(59)
@@ -47,6 +36,12 @@ RSpec.describe Oystercard do
       subject.touch_out
       expect(subject.in_journey?).to eq false
     end
+
+    it "deduct money after touched out" do
+      subject.top_up(59)
+      subject.touch_in
+      expect{subject.touch_out}.to change{subject.balance}.by(-1)
+    end
   end
 
   describe '#in_journey?' do
@@ -56,8 +51,5 @@ RSpec.describe Oystercard do
       expect(subject.in_journey?).to eq true
     end
   end
-
-
-
 
 end
