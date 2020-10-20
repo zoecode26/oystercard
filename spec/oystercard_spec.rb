@@ -3,31 +3,51 @@ require 'oystercard'
 RSpec.describe Oystercard do
   describe '#balance' do
     it 'checks the default balance' do
-      oystercard = Oystercard.new
-      expect(oystercard.balance).to eq(0)
-
+      expect(subject.balance).to eq(0)
     end
   end
 
   describe '#top_up' do
     it 'adds money to the oystercard' do
-      oystercard = Oystercard.new
-      oystercard.top_up(5)
-      expect(oystercard.balance).to eq(5)
+      expect{subject.top_up(5)}.to change{subject.balance}.by(5)
     end
 
     it 'prevents user from topping up more than 90' do
-      oystercard = Oystercard.new
-      expect{oystercard.top_up(100)}.to raise_error("£90 limit exceeded")
+      expect{subject.top_up(100)}.to raise_error("£90 limit exceeded")
     end
   end
 
   describe '#deduct' do
     it 'deducts a fare from the balance' do
-      oystercard = Oystercard.new
-      oystercard.top_up(20)
-      oystercard.deduct(3)
-      expect(oystercard.balance).to eq(17)
-    end 
+      subject.top_up(20)
+      expect{subject.deduct(3)}.to change{subject.balance}.by(-3)
+    end
+
+    it "doesn't allow negative balance" do
+      expect{subject.deduct(9999)}.to raise_error "Balance too low"
+    end
   end
+
+  describe '#touch_in' do
+    it "registers that the person has touched in" do
+      subject.touch_in
+      expect(subject.in_journey?).to eq true
+    end
+  end
+
+  describe '#touch_out' do
+    it "registers that the person has touched out" do
+      subject.touch_in
+      subject.touch_out
+      expect(subject.in_journey?).to eq false
+    end
+  end
+
+  describe '#in_journey?' do
+    it 'returns true if person has touched in' do
+      subject.touch_in
+      expect(subject.in_journey?).to eq true
+    end
+  end
+
 end
